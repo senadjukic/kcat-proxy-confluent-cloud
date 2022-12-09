@@ -1,0 +1,32 @@
+version: '3.6'
+
+services:
+  nginx:
+    image: ossobv/nginx
+    ports:
+    - "9092:9092"
+    - "443:443"
+    volumes:
+    - ./default.conf:/etc/nginx/nginx.conf
+    - ./stream_9092.log:/var/log/nginx/stream_9092.log
+    - ./stream_443.log:/var/log/nginx/stream_443.log
+    
+  kafkacat:
+    image: confluentinc/cp-kafkacat
+    depends_on:
+      - nginx
+    links:
+     - "nginx:${CCLOUD_BOOTSTRAP_SERVER_NO_PORT}"
+    command:
+      - bash
+      - -c
+      - |
+        kafkacat -b ${CCLOUD_BOOTSTRAP_SERVER} -X security.protocol=SASL_SSL -X sasl.mechanisms=PLAIN -X sasl.username=${CCLOUD_API_KEY} -X sasl.password=${CCLOUD_API_SECRET} -X api.version.request=true -t ${CCLOUD_TOPIC} -K: -P <<EOF
+        {"_id":"5c4b2b45ab234c86955f0802","index":0,"guid":"aaaaa"}
+        {"_id":"5c4b2b459ffa9bb0c0c249e1","index":1,"guid":"bbbbb"}
+        {"_id":"5c4b2b4545d7cbc7bf8b6e3e","index":2,"guid":"ccccc"}
+        {"_id":"5c4b2b45dab381e6b3024c6d","index":3,"guid":"ddddd"}
+        {"_id":"5c4b2b45d1103ce30dfe1947","index":4,"guid":"eeeee"}
+        {"_id":"5c4b2b45d6d3b5c51d3dacb7","index":5,"guid":"fffff"}
+        EOF
+        sleep infinity
