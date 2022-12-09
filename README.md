@@ -54,7 +54,7 @@ docker run --interactive --rm \
         -X sasl.username=${CCLOUD_API_KEY} \
         -X sasl.password=${CCLOUD_API_SECRET} \
         -X api.version.request=true \
-        -t test \
+        -t ${CCLOUD_TOPIC} \
         -K: \
         -P <<EOF
 1:{"order_id":1,"order_ts":1670574113,"total_amount":10.00,"customer_name":"Senad Jukic"}
@@ -80,7 +80,7 @@ docker run --interactive --rm \
         -X sasl.username=${CCLOUD_API_KEY} \
         -X sasl.password=${CCLOUD_API_SECRET} \
         -X api.version.request=true \
-        -t test \
+        -t ${CCLOUD_TOPIC} \
         -K: \
         -P -l /data/produce.txt
 ```
@@ -95,7 +95,7 @@ docker run --tty \
         -X sasl.username=${CCLOUD_API_KEY} \
         -X sasl.password=${CCLOUD_API_SECRET} \
         -X api.version.request=true \
-        -t test \
+        -t ${CCLOUD_TOPIC} \
         -C -f '\nKey (%K bytes): %k\t\nValue (%S bytes): %s\n\Partition: %p\tOffset: %o\n--\n'
 ```
 
